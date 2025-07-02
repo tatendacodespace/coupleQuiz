@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>How Well Do You Know Your Partner? 💖</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    body {
+      background: linear-gradient(135deg, #ffe4ec 0%, #f3e8ff 100%);
+      min-height: 100vh;
+    }
+    .confetti {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      pointer-events: none;
+      z-index: 50;
+    }
+  </style>
+</head>
+<body class="flex items-center justify-center min-h-screen">
+  <div class="w-full max-w-lg bg-white bg-opacity-80 rounded-3xl shadow-2xl p-4 sm:p-8 flex flex-col items-center mx-2 sm:mx-0">
+    <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold text-pink-500 mb-2 text-center leading-tight">How Well Do You Know Your Partner?</h1>
+    <p class="text-base sm:text-lg text-purple-400 mb-6 text-center">Take this fun quiz and find out! 💑</p>
+    <form id="quizForm" class="w-full flex flex-col gap-6 items-center">
+      <!-- Question will be injected here by JS -->
+    </form>
+    <div id="result" class="hidden flex flex-col items-center mt-8">
+      <div id="resultText" class="text-2xl font-semibold mb-4"></div>
+      <button id="playAgain" class="bg-pink-400 hover:bg-pink-500 text-white font-bold py-2 px-6 rounded-full transition-all duration-200 shadow-lg mt-2">Play Again</button>
+    </div>
+    <canvas id="confettiCanvas" class="confetti hidden"></canvas>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
