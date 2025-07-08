@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Create Quiz Questions | Couple Quiz</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    body {
+      background: linear-gradient(135deg, #ffe4ec 0%, #f3e8ff 100%);
+      min-height: 100vh;
+    }
+  </style>
+</head>
+<body class="flex items-center justify-center min-h-screen">
+  <div class="w-full max-w-lg bg-white bg-opacity-80 rounded-3xl shadow-2xl p-4 sm:p-8 flex flex-col items-center mx-2 sm:mx-0">
+    <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold text-pink-500 mb-2 text-center leading-tight">Create Quiz Questions</h1>
+    <p class="text-base sm:text-lg text-purple-400 mb-6 text-center">Add, edit, or delete up to 10 questions for your quiz.</p>
+    <form id="quizForm" class="w-full flex flex-col gap-6 items-center"></form>
+    <a href="quiz.html" class="mt-6 text-sm font-bold text-purple-500 hover:underline">Go to Quiz &rarr;</a>
+  </div>
+  <script src="create.js"></script>
+</body>
+</html>
