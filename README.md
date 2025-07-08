@@ -11,9 +11,9 @@ A fun, romantic, and visually engaging quiz website for couples! Perfect for sha
 - **No backend required** — just HTML, CSS, and JavaScript
 - **Easy deployment** on GitHub Pages
 
-## Customization
-- Edit questions or answers in `script.js`.
-- Tweak colors, emojis, or add more animations for your vibe.
+
+## Live Site Preview
+https://tatendacodespace.github.io/coupleQuiz/
 
 
 ## License
