@@ -93,6 +93,41 @@ function showResult(score) {
     emoji = "😅🤔💔";
   }
   resultText.innerHTML = `<span class="text-pink-500">${score}/${questions.length}</span> — ${msg} <span class="text-2xl">${emoji}</span>`;
+  // Share Results Button
+  let shareBtn = document.getElementById('shareResultsBtn');
+  if (!shareBtn) {
+    shareBtn = document.createElement('button');
+    shareBtn.id = 'shareResultsBtn';
+    shareBtn.className = 'bg-gradient-to-r from-purple-400 to-pink-400 hover:from-purple-500 hover:to-pink-500 text-white font-bold py-2 px-6 rounded-full transition-all duration-200 shadow text-sm mt-4';
+    shareBtn.textContent = 'Share Results';
+    resultDiv.appendChild(shareBtn);
+  }
+  shareBtn.onclick = async function() {
+    const summary = `I scored ${score}/${questions.length} on your Couple Quiz!`;
+    let details = '';
+    questions.forEach((q, i) => {
+      details += `\n${i+1}. ${q.q}\nMy answer: ${q.options[userAnswers[i]] ?? '—'}`;
+    });
+    const shareText = summary + '\n' + details;
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: 'Couple Quiz Results',
+          text: shareText
+        });
+      } catch (e) {
+        alert('Sharing cancelled or failed.');
+      }
+    } else {
+      try {
+        await navigator.clipboard.writeText(shareText);
+        shareBtn.textContent = 'Results Copied!';
+        setTimeout(()=>shareBtn.textContent='Share Results', 1500);
+      } catch {
+        prompt('Copy your results:', shareText);
+      }
+    }
+  };
   resultDiv.classList.remove('hidden');
   quizForm.classList.add('hidden');
   confettiCanvas.classList.remove('hidden');
