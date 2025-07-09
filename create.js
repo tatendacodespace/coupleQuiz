@@ -90,16 +90,39 @@ function renderCreate() {
     shareDiv.innerHTML = `
       <div class="font-bold text-purple-600 mb-1">Share this quiz:</div>
       <div class="flex flex-col gap-2">
-        <label class="text-xs text-gray-500">Shareable Link:
-          <input type="text" readonly value="${shareUrl}" class="w-full border rounded px-2 py-1 bg-white text-xs font-mono" onclick="this.select()" />
-        </label>
-        <label class="text-xs text-gray-500">Or Copy Code:
-          <textarea readonly rows="2" class="w-full border rounded px-2 py-1 bg-white text-xs font-mono" onclick="this.select()">${encoded}</textarea>
-        </label>
+        <button id="shareQuizBtn" class="bg-gradient-to-r from-pink-400 to-purple-400 hover:from-pink-500 hover:to-purple-500 text-white font-bold py-2 px-6 rounded-full transition-all duration-200 shadow text-sm">Share Link</button>
       </div>
-      <div class="text-xs text-gray-400 mt-1">Send the link or code to your partner. They can open the link or paste the code on the quiz page.</div>
+      <div class="text-xs text-gray-400 mt-1">Send the link to your partner. They can open the link on the quiz page.</div>
     `;
     quizForm.appendChild(shareDiv);
+    // Share button logic
+    setTimeout(() => {
+      const shareBtn = document.getElementById('shareQuizBtn');
+      if (shareBtn) {
+        shareBtn.onclick = async function() {
+          if (navigator.share) {
+            try {
+              await navigator.share({
+                title: 'Couple Quiz',
+                text: 'Take my Couple Quiz!',
+                url: shareUrl
+              });
+            } catch (e) {
+              alert('Sharing cancelled or failed.');
+            }
+          } else {
+            // fallback: copy to clipboard
+            try {
+              await navigator.clipboard.writeText(shareUrl);
+              shareBtn.textContent = 'Link Copied!';
+              setTimeout(()=>shareBtn.textContent='Share Link', 1500);
+            } catch {
+              prompt('Copy this link:', shareUrl);
+            }
+          }
+        };
+      }
+    }, 0);
   }
 }
 
