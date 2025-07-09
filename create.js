@@ -79,6 +79,28 @@ function renderCreate() {
       renderEdit(idx);
     };
   });
+  // --- SHARE/EXPORT ---
+  if (questions.length > 0) {
+    const shareDiv = document.createElement('div');
+    shareDiv.className = 'w-full bg-purple-50 rounded-xl p-4 shadow flex flex-col gap-2 mt-4';
+    // Shareable link
+    const baseUrl = window.location.origin + window.location.pathname.replace('create.html','quiz.html');
+    const encoded = encodeURIComponent(btoa(unescape(encodeURIComponent(JSON.stringify(questions)))));
+    const shareUrl = `${baseUrl}?q=${encoded}`;
+    shareDiv.innerHTML = `
+      <div class="font-bold text-purple-600 mb-1">Share this quiz:</div>
+      <div class="flex flex-col gap-2">
+        <label class="text-xs text-gray-500">Shareable Link:
+          <input type="text" readonly value="${shareUrl}" class="w-full border rounded px-2 py-1 bg-white text-xs font-mono" onclick="this.select()" />
+        </label>
+        <label class="text-xs text-gray-500">Or Copy Code:
+          <textarea readonly rows="2" class="w-full border rounded px-2 py-1 bg-white text-xs font-mono" onclick="this.select()">${encoded}</textarea>
+        </label>
+      </div>
+      <div class="text-xs text-gray-400 mt-1">Send the link or code to your partner. They can open the link or paste the code on the quiz page.</div>
+    `;
+    quizForm.appendChild(shareDiv);
+  }
 }
 
 function renderEdit(idx) {

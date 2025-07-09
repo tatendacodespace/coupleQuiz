@@ -12,14 +12,45 @@ function loadQuestionsFromLS() {
   try { return JSON.parse(data); } catch { return []; }
 }
 
-let questions = loadQuestionsFromLS();
+function getQuestionsFromUrlOrLS() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const qParam = urlParams.get('q');
+  if (qParam) {
+    try {
+      return JSON.parse(decodeURIComponent(escape(atob(qParam))));
+    } catch { return []; }
+  }
+  return loadQuestionsFromLS();
+}
+
+let questions = getQuestionsFromUrlOrLS();
 let currentQuestion = 0;
 let userAnswers = [];
 
 function renderQuestion(idx) {
   quizForm.innerHTML = '';
   if (!questions.length) {
-    quizForm.innerHTML = '<div class="text-center text-pink-500 font-bold text-lg">No questions found. <a href="create.html" class="underline text-purple-500">Add some first!</a></div>';
+    quizForm.innerHTML = `<div class="text-center text-pink-500 font-bold text-lg mb-4">No questions found.<br><a href="create.html" class="underline text-purple-500">Add some first!</a></div>
+    <form id='importForm' class='flex flex-col gap-2 items-center mt-4'>
+      <label class='text-xs text-gray-500'>Paste a quiz code:
+        <textarea id='importCode' rows='2' class='w-full border rounded px-2 py-1 bg-white text-xs font-mono' placeholder='Paste code here'></textarea>
+      </label>
+      <button type='submit' class='bg-purple-400 hover:bg-purple-500 text-white font-bold py-1 px-4 rounded-full'>Import Quiz</button>
+    </form>`;
+    const importForm = document.getElementById('importForm');
+    if (importForm) {
+      importForm.onsubmit = function(e) {
+        e.preventDefault();
+        const code = document.getElementById('importCode').value.trim();
+        if (!code) return;
+        try {
+          questions = JSON.parse(decodeURIComponent(escape(atob(code))));
+          renderQuestion(0);
+        } catch {
+          alert('Invalid code!');
+        }
+      };
+    }
     return;
   }
   const q = questions[idx];
