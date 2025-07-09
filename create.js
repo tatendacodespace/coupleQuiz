@@ -13,8 +13,41 @@ function loadQuestionsFromLS() {
 
 let questions = loadQuestionsFromLS();
 
+// Add custom quiz title and description support
+let quizMeta = loadQuizMetaFromLS();
+
+function saveQuizMetaToLS(meta) {
+  localStorage.setItem('coupleQuizMeta', JSON.stringify(meta));
+}
+function loadQuizMetaFromLS() {
+  const data = localStorage.getItem('coupleQuizMeta');
+  if (!data) return { title: '', desc: '' };
+  try { return JSON.parse(data); } catch { return { title: '', desc: '' }; }
+}
+
+function renderMetaForm() {
+  const metaDiv = document.createElement('div');
+  metaDiv.className = 'w-full bg-white bg-opacity-80 rounded-xl p-4 shadow flex flex-col gap-2 mb-4';
+  metaDiv.innerHTML = `
+    <form id="metaForm" class="flex flex-col gap-2">
+      <input type="text" id="quizTitle" class="border rounded px-2 py-1 text-lg font-bold" maxlength="40" placeholder="Quiz Title (optional)" value="${quizMeta.title || ''}" />
+      <textarea id="quizDesc" class="border rounded px-2 py-1 text-sm" maxlength="120" placeholder="Quiz Description (optional)">${quizMeta.desc || ''}</textarea>
+      <button type="submit" class="bg-purple-400 hover:bg-purple-500 text-white font-bold py-1 px-4 rounded-full self-end">Save</button>
+    </form>
+  `;
+  quizForm.prepend(metaDiv);
+  metaDiv.querySelector('#metaForm').onsubmit = function(e) {
+    e.preventDefault();
+    quizMeta.title = metaDiv.querySelector('#quizTitle').value.trim();
+    quizMeta.desc = metaDiv.querySelector('#quizDesc').value.trim();
+    saveQuizMetaToLS(quizMeta);
+    renderCreate();
+  };
+}
+
 function renderCreate() {
   quizForm.innerHTML = '';
+  renderMetaForm();
   questions.forEach((q, i) => {
     const qDiv = document.createElement('div');
     qDiv.className = 'mb-4 w-full bg-pink-50 rounded-xl p-4 shadow flex flex-col gap-2 relative';
@@ -86,7 +119,12 @@ function renderCreate() {
     // Shareable link
     const baseUrl = window.location.origin + window.location.pathname.replace('create.html','quiz.html');
     const encoded = encodeURIComponent(btoa(unescape(encodeURIComponent(JSON.stringify(questions)))));
-    const shareUrl = `${baseUrl}?q=${encoded}`;
+    // Add meta to link if present
+    let metaStr = '';
+    if (quizMeta.title || quizMeta.desc) {
+      metaStr = '&meta=' + encodeURIComponent(btoa(unescape(encodeURIComponent(JSON.stringify(quizMeta)))));
+    }
+    const shareUrl = `${baseUrl}?q=${encoded}${metaStr}`;
     shareDiv.innerHTML = `
       <div class="font-bold text-purple-600 mb-1">Share this quiz:</div>
       <div class="flex flex-col gap-2">

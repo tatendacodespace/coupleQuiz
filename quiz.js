@@ -23,14 +23,36 @@ function getQuestionsFromUrlOrLS() {
   return loadQuestionsFromLS();
 }
 
+function getMetaFromUrlOrLS() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const metaParam = urlParams.get('meta');
+  if (metaParam) {
+    try {
+      return JSON.parse(decodeURIComponent(escape(atob(metaParam))));
+    } catch { return { title: '', desc: '' }; }
+  }
+  const data = localStorage.getItem('coupleQuizMeta');
+  if (!data) return { title: '', desc: '' };
+  try { return JSON.parse(data); } catch { return { title: '', desc: '' }; }
+}
+
 let questions = getQuestionsFromUrlOrLS();
+let quizMeta = getMetaFromUrlOrLS();
 let currentQuestion = 0;
 let userAnswers = [];
 
 function renderQuestion(idx) {
   quizForm.innerHTML = '';
+  // Quiz meta display
+  if (quizMeta.title || quizMeta.desc) {
+    const metaDiv = document.createElement('div');
+    metaDiv.className = 'w-full bg-white bg-opacity-80 rounded-xl p-4 shadow flex flex-col gap-1 mb-4';
+    if (quizMeta.title) metaDiv.innerHTML += `<div class='text-xl font-bold text-pink-500 text-center mb-1'>${quizMeta.title}</div>`;
+    if (quizMeta.desc) metaDiv.innerHTML += `<div class='text-sm text-purple-400 text-center mb-1'>${quizMeta.desc}</div>`;
+    quizForm.appendChild(metaDiv);
+  }
   if (!questions.length) {
-    quizForm.innerHTML = `<div class="text-center text-pink-500 font-bold text-lg mb-4">No questions found.<br><a href="create.html" class="underline text-purple-500">Add some first!</a></div>
+    quizForm.innerHTML += `<div class="text-center text-pink-500 font-bold text-lg mb-4">No questions found.<br><a href="create.html" class="underline text-purple-500">Add some first!</a></div>
     <form id='importForm' class='flex flex-col gap-2 items-center mt-4'>
       <label class='text-xs text-gray-500'>Paste a quiz code:
         <textarea id='importCode' rows='2' class='w-full border rounded px-2 py-1 bg-white text-xs font-mono' placeholder='Paste code here'></textarea>
